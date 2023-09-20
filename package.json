@@ -1,0 +1,13 @@
+
+  {
+    "name": "checkpoint_6_tower-fs",
+    "version": "1.0.0",
+    "scripts": {
+      "build": "npm run setup:server",
+      "setup:app": "npm run setup:server && npm run setup:client",
+      "setup:client": "cd checkpoint_6_Tower-FS.client && npm i",
+      "setup:server": "cd checkpoint_6_Tower-FS && npm i",
+      "start": "node checkpoint_6_Tower-FS/index.js"
+    }
+  }
+  
