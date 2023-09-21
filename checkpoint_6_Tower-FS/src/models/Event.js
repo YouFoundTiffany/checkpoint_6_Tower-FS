@@ -9,7 +9,7 @@ export const EventSchema = new Schema({
 
     description: { type: String, required: true, minlength: 1, maxlength: 1000 },
 
-    imgUrl: { type: String, maxlength: 1000 },
+    coverImg: { type: String, maxlength: 1000 },
 
     location: { type: String, required: true, minlength: 1, maxlength: 50 },
 

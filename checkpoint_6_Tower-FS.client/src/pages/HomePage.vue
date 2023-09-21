@@ -15,20 +15,19 @@
 
       <!-- STUB filter bar -->
       <section class="row bg-info gap-2 p-2 rounded my-2">
-        <!-- NOTE changing the ref value here recomputes the album computed -->
+        <!-- NOTE changing the ref value here recomputes the event computed -->
         <!-- <div class="col-12 bg-info d-flex p-2 rounded justify-content-between"> -->
           <button class="btn col btn-outline-light" @click="filterBy = ''">All</button>
           <button class="btn col btn-outline-light" @click="filterBy = 'concert'">Concerts</button>
           <button class="btn col btn-outline-light" @click="filterBy = 'convention'">Conventions</button>
           <button class="btn col btn-outline-light" @click="filterBy = 'sport'">Sports</button>
           <button class="btn col btn-outline-light" @click="filterBy = 'digital'">Digital</button>
-          <button class="btn col btn-outline-light" @click="filterBy = 'misc'">Misc</button>
+          <!-- <button class="btn col btn-outline-light" @click="filterBy = 'misc'">Misc</button> -->
         <!-- </div> -->
       </section>
 
-      <!-- STUB album cards -->
+      <!-- STUB event cards -->
       <section class="row g-4 pt-4">
-Hello
         <div v-for="event in events" :key="event.id" class="col-6 col-md-3">
           <!-- {{ event.name }} -->
           <EventCard :event="event"/>

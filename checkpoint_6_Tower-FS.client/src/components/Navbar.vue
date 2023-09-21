@@ -1,8 +1,8 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-    <router-link class="fs-1 fst-italic d-flex" :to="{ name: 'Home' }"> Tower
-      🗼
-      <!-- <div class="d-flex flex-column align-items-center">
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+      <router-link class="fs-1 fst-italic d-flex" :to="{ name: 'Home' }"> Tower
+        🗼
+        <!-- <div class="d-flex flex-column align-items-center">
         <img alt="logo" src="../assets/img/cw-logo.png" height="45" />
       </div> -->
     </router-link>
@@ -10,14 +10,17 @@
       aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarText">
+    <div class="collapse navbar-collapse p-2 rounded " id="navbarText">
       <ul class="navbar-nav me-auto">
-        <li>
-          <!-- TODO MAY USE LINK LATER IN BUILD PROCESS -->
-          <!-- <router-link :to="{ name: 'Event' }" class="btn text-success lighten-30 selectable text-uppercase">
-            About
-          </router-link> -->
-        </li>
+        <ModalWrapper id="create-event" v-if="user.isAuthenticated">
+          <template #button>
+            <i class="mdi mdi-plus-box"></i> Create Event
+          </template>
+
+          <template #body>
+            <EventForm />
+          </template>
+        </ModalWrapper>
       </ul>
       <!-- LOGIN COMPONENT HERE -->
       <Login />
@@ -26,12 +29,17 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import { AppState } from '../AppState.js';
 import Login from './Login.vue';
+import ModalWrapper from './ModalWrapper.vue';
 export default {
   setup() {
-    return {}
+    return {
+      user: computed(() => AppState.user)
+    }
   },
-  components: { Login }
+  components: { Login, ModalWrapper }
 }
 </script>
 

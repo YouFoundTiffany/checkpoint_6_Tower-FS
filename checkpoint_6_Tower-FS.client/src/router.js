@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/events/:eventId',
     name: 'Event Details',
-    component: loadPage('EvenDetailsPage')
+    component: loadPage('EventDetailsPage')
   },
 ]
 
