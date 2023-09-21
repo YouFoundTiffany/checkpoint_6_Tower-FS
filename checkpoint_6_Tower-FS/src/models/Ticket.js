@@ -3,8 +3,8 @@ const ObjectId = Schema.Types.ObjectId
 Schema
 
 export const TicketSchema = new Schema({
-    eventId: { type: ObjectId, required: true, ref: 'Event' },
     accountId: { type: ObjectId, required: true, ref: 'Account' },
+    eventId: { type: ObjectId, required: true, ref: 'Event' },
 }, { toJSON: { virtuals: true } })
 
 TicketSchema.virtual('profile', {

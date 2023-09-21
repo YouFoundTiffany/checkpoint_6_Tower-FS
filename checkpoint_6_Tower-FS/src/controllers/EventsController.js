@@ -51,7 +51,7 @@ export class EventsController extends BaseController {
 
     async getTicketOnEvent(request, response, next) {
         try {
-            const tickets = await ticketsService.getTicketOnEvent(request.params.evenId)
+            const tickets = await ticketsService.getTicketOnEvent(request.params.eventId)
             request.send(tickets)
         } catch (error) {
             next(error)

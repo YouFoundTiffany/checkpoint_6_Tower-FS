@@ -13,17 +13,17 @@ export const AppState = reactive({
   /**@type {Event[]} */
   events: [],
 
-  // /**@type {Event} */
-  // activeEvent: null,
+  /**@type {Event} */
+  activeEvent: null,
 
-  // /**type @type {Comment[]} */
-  // activeEventComments: [],
+  /**type @type {Comment[]} */
+  activeEventComments: [],
 
 
-  // /**@type {Ticket[]} */
-  // myTickets: [],
+  /**@type {Ticket[]} */
+  myTickets: [],
 
-  // /**@type {Ticket[]} */
-  // activeEventTickets: [],
+  /**@type {Ticket[]} */
+  activeEventTickets: [],
 
 })
