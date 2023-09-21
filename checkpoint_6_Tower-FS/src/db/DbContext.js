@@ -13,7 +13,7 @@ class DbContext {
 
   Tickets = mongoose.model('Ticket', TicketSchema)
 
-  Comments = mongoose.model('Coment', CommentSchema)
+  Comments = mongoose.model('Comment', CommentSchema)
 }
 
 export const dbContext = new DbContext()

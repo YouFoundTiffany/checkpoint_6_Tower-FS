@@ -1,16 +1,40 @@
-<template><div>
-    Hello from Event Card Template
-</div>
+<template>
+  <!-- NOTE two different ways to set up the to props for a router-link -->
+  <!-- <router-link :to="{name: 'Album Details', params: {albumId: album.id}}"> -->
+  <router-link :to="{ path: `events/${event.id}` }">
+    <div class="card event-card">
+      <!--  -->
+      <img :src="event.coverImg" alt="event image">
+      <div>
+        <p class="text-center fw-bold">{{ event.name }}</p>
+        <p class="text-center">{{ event.ticketCount }}<i class="mdi mdi-heart"></i></p>
+      </div>
+    </div>
+  </router-link>
 </template>
 
+
 <script>
+// import { AppState } from '../AppState';
+// import { computed, reactive, onMounted } from 'vue';
+import { Event } from '../models/Event.js';
 export default {
-setup() {
-  return {};
-},
+
+  props: { event: { type: Event || Object, required: true } },
+  setup() {
+    return {}
+  }
 };
 </script>
 
 
-<style>
+<style lang="scss" scoped>
+.event-card {
+  img {
+    height: 30vh;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
 </style>

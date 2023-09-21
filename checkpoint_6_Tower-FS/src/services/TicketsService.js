@@ -3,6 +3,7 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 
 class TicketsService {
 
+
     async createTicket(ticketBody) {
         const ticket = await dbContext.Tickets.create(ticketBody)
         await ticket.populate('event')
@@ -10,8 +11,8 @@ class TicketsService {
         return ticket
 
     }
-    async getTicketOnEvent(eventId) {
-        const tickets = await dbContext.Tickets.find({ accountId: eventId }).populate({ path: 'event', populate: { path: 'creator ticketCount', select: '-email' } })
+    async getTicketsOnEvent(eventId) {
+        const tickets = await dbContext.Tickets.find({ eventId }).populate('profile', '-email')
         return tickets
 
     }
@@ -25,8 +26,14 @@ class TicketsService {
 
         await ticket.remove()
 
-        // TODO
-        return `${ticket.profile.name} is no longer attending ${ticket.eventId.name}`
+
+        // @ts-ignore
+        return `${ticket.profile.name} is no longer attending ${ticket.event.name}`
+    }
+
+    async getTicketsByAccount(userId) {
+        const tickets = await dbContext.Tickets.find({ accountId: userId }).populate({ path: 'event', populate: { path: 'creator ticketCount', select: '-email' } })
+        return tickets
 
 
     }

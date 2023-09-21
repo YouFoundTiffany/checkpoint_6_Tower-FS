@@ -12,7 +12,7 @@ export class Event{
         this.isCanceled = data.isCanceled
         this.type = data.type
         this.ticketCount = data.ticketCount
-        // this.isEvent = 'this is a classed event'
+        this.isEvent = 'this is a classed event'
 }
 
 }
