@@ -45,7 +45,7 @@ import Pop from '../utils/Pop.js';
 import { eventsService } from '../services/EventsService.js'
 import { AppState } from '../AppState.js'
 import { logger } from '../utils/Logger.js';
-import {EventCard} from '../components/EventCard.vue'
+import EventCard from '../components/EventCard.vue'
 // import { accountService } from '../services/AccountService.js';
 
 export default {

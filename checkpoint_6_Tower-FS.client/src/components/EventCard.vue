@@ -3,7 +3,7 @@
   <!-- <router-link :to="{name: 'Album Details', params: {albumId: album.id}}"> -->
   <router-link :to="{ path: `events/${event.id}` }">
     <div class="card event-card">
-      <!--  -->
+
       <img :src="event.coverImg" alt="event image">
       <div>
         <p class="text-center fw-bold">{{ event.name }}</p>
