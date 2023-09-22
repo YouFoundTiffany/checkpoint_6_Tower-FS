@@ -1,5 +1,5 @@
 <template>
-  <section class="container-flex">
+  <section class="container">
     <div class="row pb-4">
   <img class="banner-img" src="https://images.unsplash.com/photo-1561489396-888724a1543d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Tower Events ltd">
 </div>

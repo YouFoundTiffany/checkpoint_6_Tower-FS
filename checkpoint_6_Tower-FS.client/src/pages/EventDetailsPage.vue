@@ -10,6 +10,11 @@
                 </p>
                 <!-- FIXME  GET NAME TO DISPLAY CORRECTLY -->
                 <p class="mb-1">by: {{ event.creator }}</p>
+                <!-- <p class="mb-1">by: {{ event.creator }}</p>
+                <p class="mb-1">by: {{ event.creator }}</p>
+                <p class="mb-1">by: {{ event.creator }}</p>
+                <p class="mb-1">by: {{ event.creator }}</p>
+                <p class="mb-1">by: {{ event.creator }}</p> -->
             </div>
         </div>
     </section>
@@ -55,7 +60,7 @@
     <!-- Row 4: Comments (full width) -->
     <div class="border-secondary col-12 my-1">
         <div v-for="comment in comments" :key="comment.id" class="card elevation-3 border-bottom pb-3 mb-3">
-            <Comments/>
+            <Comments activeEventComments/>
         </div>
     </div>
 </section>
@@ -70,12 +75,13 @@
 import { AppState } from '../AppState';
 import { computed, reactive, onMounted, ref, onUpdated, watchEffect } from 'vue';
 import Pop from '../utils/Pop.js';
-import { useRoute } from 'vue-router';
+import { stringifyQuery, useRoute } from 'vue-router';
 import ModalWrapper from '../components/ModalWrapper.vue';
 import { ticketsService } from '../services/TicketsService.js'
 import { eventsService } from '../services/EventsService.js';
 import CommentsForm from '../components/CommentsForm.vue';
 export default {
+    // props: { activeEventComments {type: String, required: true}}
     setup() {
         const inProgress = ref(false)
         const route = useRoute();
@@ -137,7 +143,7 @@ export default {
             }
         };
     },
-    components: { ModalWrapper, CommentsForm }
+    components: {CommentsForm, ModalWrapper}
 };
 </script>
 
