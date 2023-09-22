@@ -7,7 +7,7 @@
       <img :src="event.coverImg" alt="event image">
       <div>
         <p class="text-center fw-bold">{{ event.name }}</p>
-        <p class="text-center">{{ event.ticketCount }}<i class="mdi mdi-heart"></i></p>
+        <p class="text-center">{{ event.ticketCount }} <i class="mdi mdi-ticket"></i></p>
       </div>
     </div>
   </router-link>

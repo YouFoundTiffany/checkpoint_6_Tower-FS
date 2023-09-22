@@ -1,67 +1,69 @@
 <template>
-    <div class="container-fluid">
-        <section class="row ">
-            <!-- STUB Event details -->
-            <div class="col-12 col-md-5 col-lg-3">
-                <section v-if="event" class="row">
-                    <div class="col-6">
-                        <img :src="event.coverImg" class="event-cover" :alt="event.name + ' cover image'">
-                    </div>
-                    <div class="col-6 fw-bold">
-                        <div class="bg-warning p-2 rounded">
-                            <p class="mb-1 text-white">
-                                {{ event.name }}
-                            </p>
-                            <p class="mb-1">
-                                <!-- FIXME CHECK THIS  -->
-                                by: {{ event.creator }}
-                            </p>
-                        </div>
-                        <!-- STUB button to create comment -->
-                        <ModalWrapper id="create-comment" btnColor="danger">
-                            <template #button>
-                                <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
-                            </template>
-                            <template #body>
-                                <CommentsForm />
-                            </template>
-                        </ModalWrapper>
-                    </div>
-                    <!-- STUB ticket button -->
-                    <div class="col-6 bg-info p-2 rounded">
-                        <p class="mb-0">{{ event.ticketCount }}</p>
-                        <p class="mb-0">Tickets</p>
-                    </div>
-                    <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
-                        role="button" class="col-6 bg-warning p-2 rounded">Ticket<i class="mdi mdi-heart"></i></button>
-                    <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
-                        class="col-6 bg-danger p-2 rounded"> Shred Ticket<i class="mdi mdi-heart"></i></button>
-                    <button v-else disabled role="button" class="col-6 btn btn-danger p-2 rounded"
-                        title="log in to ticket">log in to get Ticket<i class="mdi mdi-heart"></i></button>
-
-
-                    <!-- STUB Ticket images -->
-                    <div class="col-12">
-
-                        Where buyer images go here.
-                        <!-- <img class="ticket-image" v-for="ticket in tickets" :src="ticket.profile.picture"
-                            :key="ticket.id" alt=""> -->
-                    </div>
-
-                </section>
-            </div>
-            <!-- STUB comments -->
-            <div class="col-12 col-md-7 col-lg-9">
-                <div class="">
-                    <div v-for="comment in comments" :key="comment.id" >
-Comments Go Here :D
-                    </div>
+    <section class="container">
+        <div class="row justify-content-between my-4">
+            <!-- Left Column -->
+            <div class="col-6">
+                <img :src="event.coverImg" class="img-fluid rounded" :alt="event.name + ' cover image'">
                 </div>
+            <div class="col-6 fw-bold bg-light p-3 rounded">
+                <p class="mb-2 text-dark">{{ event.name }}
+                </p>
+                <!-- FIXME  GET NAME TO DISPLAY CORRECTLY -->
+                <p class="mb-1">by: {{ event.creator }}</p>
             </div>
+        </div>
+    </section>
 
-        </section>
+
+<section class="container">
+      <!-- STUB ticket button -->
+      <div class="fs-4 text-center row justify-content-between">
+            <div class="col-4 bg-info p-2 rounded">
+                <p class="mb-0">{{ event.ticketCount }} Tickets Sold </p>
+            </div>
+                <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
+                    role="button" class="col-4 bg-warning p-2 rounded">Ticket <i class="mdi mdi-ticket"></i></button>
+                <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
+                            class="col-4 bg-danger p-2 rounded"> Shred Ticket <i class="mdi mdi-ticket"></i></button>
+                <button v-else disabled role="button" class="col-4 btn btn-danger p-2 rounded"
+                        title="log in to ticket">log in to get Ticket<i class="mdi mdi-ticket"></i></button>
+        </div>
+</section>
+                    <!-- Row 3: Ticket owners -->
+                    <!-- STUB Ticket images -->
+<section class="container">
+    <div class="row my-3">
+        <div class="col-12">
+            <img class="profile-pic" v-for="ticket in tickets" :src="ticket.profile.picture" :key="ticket.id" alt="Ticket Holder">
+        </div>
     </div>
+</section>
+
+<section class="container">
+
+
+    <!-- STUB button to create comment -->
+    <ModalWrapper id="create-comment" btnColor="danger">
+        <template #button>
+            <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
+        </template>
+        <template #body>
+            <CommentsForm />
+        </template>
+    </ModalWrapper>
+    <!-- STUB comments -->
+    <!-- Row 4: Comments (full width) -->
+    <div class="border-secondary col-12 my-1">
+        <div v-for="comment in comments" :key="comment.id" class="card elevation-3 border-bottom pb-3 mb-3">
+            <Comments/>
+        </div>
+    </div>
+</section>
+
+
 </template>
+
+
 
 
 <script>
