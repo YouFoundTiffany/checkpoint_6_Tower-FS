@@ -4,7 +4,7 @@ import { logger } from '../utils/Logger'
 import { api } from './AxiosService'
 import Pop from '../utils/Pop.js'
 import { Ticket } from '../models/Ticket.js'
-Ticket
+
 
 
 class AccountService {
@@ -26,6 +26,7 @@ class AccountService {
       Pop.error(error)
     }
   }
+
 
 }
 

@@ -17,10 +17,10 @@
 <script>
 // import { AppState } from '../AppState';
 // import { computed, reactive, onMounted } from 'vue';
-import { Event } from '../models/Event.js';
+import { TEvent } from '../models/Event.js';
 export default {
 
-  props: { event: { type: Event || Object, required: true } },
+  props: { event: { type: TEvent || Object, required: true } },
   setup() {
     return {}
   }

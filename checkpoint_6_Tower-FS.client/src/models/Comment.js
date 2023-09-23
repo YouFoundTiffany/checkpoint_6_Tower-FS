@@ -2,8 +2,9 @@
 
 
 export class Comment {
-    constructor(data) {
-        this.id = data.id
+    constructor(data){
+    // NOTE did not work Testing name
+    // this.name = data.name
         this.eventId = data.eventId
         this.accountId = data.accountId
         this.profile = data.profile

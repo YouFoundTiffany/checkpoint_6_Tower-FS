@@ -1,5 +1,5 @@
 import { AppState } from "../AppState.js"
-import { Event } from "../models/Event.js"
+import { TEvent } from "../models/Event.js"
 import { Ticket } from "../models/Ticket.js"
 import { Comment } from "../models/Comment.js"
 import { logger } from "../utils/Logger.js"
@@ -13,18 +13,18 @@ class EventsService{
     async getEvents() {
         const response = await api.get('api/events')
         logger.log('🗼got Events', response.data)
-        AppState.events = response.data.map(event => new Event(event))
+        AppState.events = response.data.map(event => new TEvent(event))
 }
 
     async createEvent(eventData) {
         const response = await api.post('api/events', eventData)
         logger.log('created Event!', response.data)
-        // NOTE unshift adds the newest item to the start and push to the end (for best use case, consider how your server data is returned)
-        const newEvent = new Event(response.data)
-        AppState.events.unshift(newEvent)
+
+        // const newEvent = new TEvent(response.data)
+        // AppState.events.unshift(newEvent)
         // or?
-        // AppState.evetns.push(new Event(response.data))
-        return newEvent
+        // AppState.events.push(new Event(response.data))
+        return response.data
     }
 
     async getCommentsByEventId(eventId) {
@@ -37,7 +37,7 @@ class EventsService{
     async getEventById(eventId) {
         const response = await api.get(`api/events/${eventId}`)
         logger.log('got one event :D', response.data)
-        AppState.activeEvent = new Event(response.data)
+        AppState.activeEvent = new TEvent(response.data)
     }
 
     async getTicketsByEventId(eventId){
@@ -45,6 +45,15 @@ class EventsService{
         logger.log('tickets for this event', response.data)
         AppState.activeEventTickets = response.data.map(ticket => new Ticket(ticket))
         // TODO
+    }
+    async cancelEvent(eventId) {
+        const response = await api.delete(`api/events/${eventId}`)
+        logger.log('canceled event!', response.data)
+        AppState.activeEvent = null
+        let indextoRemove = AppState.events.findIndex(event => event.id == eventId)
+        if (indextoRemove >= 0) {
+            AppState.events.splice(indextoRemove, 1)
+        }
     }
 
 

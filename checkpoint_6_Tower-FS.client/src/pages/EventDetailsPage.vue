@@ -1,71 +1,89 @@
 <template>
-    <section class="container">
-        <div class="row justify-content-between my-4">
-            <!-- Left Column -->
-            <div class="col-6">
-                <img :src="event.coverImg" class="img-fluid rounded" :alt="event.name + ' cover image'">
+    <section>
+        <div v-if="event">
+
+
+            <div class="container">
+                <div class="row justify-content-between my-4">
+                    <div class="text-end">
+                        <button v-if="event.creatorId == account.id" @click="cancelEvent">Cancel</button>
+                    </div>
+                    <!-- EVENT COVER IMAGE -->
+                    <div class="col-6">
+                        <img :src="event.coverImg" class="img-fluid rounded" :alt="event.name + ' cover image'">
+                    </div>
+                    <!-- EVENT DETAILS -->
+                    <div class="col-6 fw-bold bg-light p-3 rounded">
+                        <h1 class="mb-2 text-dark">{{ event.name }}
+                        </h1>
+                        <p class="mb-1">Capacity: {{ event.capacity }}</p>
+                        <!-- <p class="mb-1">Tickets Left: ???</p> -->
+                        <!-- FIXME -->
+                        <p v-if="canceled" class="mb-1">THIS EVENT HAS BEEN CANCELED</p>
+
+                        <p class="mb-1">Where: {{ event.location }}</p>
+                        <p class="mb-1">Date: {{ event.startDate }}</p>
+                        <p class="mb-1">Type: {{ event.type }}</p>
+                        <p class="mb-1">About: {{ event.description }}</p>
+                    </div>
                 </div>
-            <div class="col-6 fw-bold bg-light p-3 rounded">
-                <p class="mb-2 text-dark">{{ event.name }}
-                </p>
-                <!-- FIXME  GET NAME TO DISPLAY CORRECTLY -->
-                <p class="mb-1">by: {{ event.creator }}</p>
-                <!-- <p class="mb-1">by: {{ event.creator }}</p>
-                <p class="mb-1">by: {{ event.creator }}</p>
-                <p class="mb-1">by: {{ event.creator }}</p>
-                <p class="mb-1">by: {{ event.creator }}</p>
-                <p class="mb-1">by: {{ event.creator }}</p> -->
             </div>
+
+            <div class="container">
+                <!-- STUB ticket button -->
+                <div v-if="event" class="fs-4 text-center row justify-content-between">
+                    <div class="col-4 bg-info p-2 rounded">
+                        <p class="mb-0">{{ event.ticketCount }} Tickets Sold </p>
+                    </div>
+                    <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
+                        role="button" class="col-4 bg-warning p-2 rounded">Ticket <i class="mdi mdi-ticket"></i></button>
+                    <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
+                        class="col-4 bg-danger p-2 rounded"> Shred Ticket <i class="mdi mdi-ticket"></i></button>
+                    <button v-else disabled role="button" class="col-4 btn btn-danger p-2 rounded"
+                        title="log in to ticket">log in to get Ticket<i class="mdi mdi-ticket"></i></button>
+                </div>
+            </div>
+            <!-- STUB ROW 3: Ticket owners -->
+            <!-- STUB Ticket images -->
+            <div class="container">
+                <div class="row my-3">
+                    <div class="col-12">
+                        <!-- NOTE  -->
+                        <!-- <h4>{{ ticket.profile.name }}</h4> -->
+                        <!-- When using a v-for you are creating a new instance of that item and it exists only in that element. Note to look at inheritance as you can put it on a parent div-->
+                        <img v-b-tooltip.hover v-for="ticket in tickets" :key="ticket.id" :title="ticket.profile.name"
+                            class="profile-pic" :src="ticket.profile.picture" alt="Ticket Holder">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container">
+
+                <!-- STUB ROW 4 -->
+                <!-- STUB Create Comment -->
+                <ModalWrapper id="create-comment" btnColor="danger">
+                    <template #button>
+                        <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
+                    </template>
+                    <template #body>
+                        <CommentsForm />
+                    </template>
+                </ModalWrapper>
+                <!-- STUB Display Comments -->
+                <div class="border-secondary col-12 my-1">
+                    <div v-for="comment in comments" :key="comment.id" class="m-0 card elevation-3 p-3">
+                        <!-- {{ comment }} -->
+                        <Comments :comment="comment" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else class="text-center">
+            <h1>Oops! No event on this page.</h1>
+            <h1>🤔</h1>
         </div>
     </section>
-
-
-<section class="container">
-      <!-- STUB ticket button -->
-      <div class="fs-4 text-center row justify-content-between">
-            <div class="col-4 bg-info p-2 rounded">
-                <p class="mb-0">{{ event.ticketCount }} Tickets Sold </p>
-            </div>
-                <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
-                    role="button" class="col-4 bg-warning p-2 rounded">Ticket <i class="mdi mdi-ticket"></i></button>
-                <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
-                            class="col-4 bg-danger p-2 rounded"> Shred Ticket <i class="mdi mdi-ticket"></i></button>
-                <button v-else disabled role="button" class="col-4 btn btn-danger p-2 rounded"
-                        title="log in to ticket">log in to get Ticket<i class="mdi mdi-ticket"></i></button>
-        </div>
-</section>
-                    <!-- Row 3: Ticket owners -->
-                    <!-- STUB Ticket images -->
-<section class="container">
-    <div class="row my-3">
-        <div class="col-12">
-            <img class="profile-pic" v-for="ticket in tickets" :src="ticket.profile.picture" :key="ticket.id" alt="Ticket Holder">
-        </div>
-    </div>
-</section>
-
-<section class="container">
-
-
-    <!-- STUB button to create comment -->
-    <ModalWrapper id="create-comment" btnColor="danger">
-        <template #button>
-            <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
-        </template>
-        <template #body>
-            <CommentsForm />
-        </template>
-    </ModalWrapper>
-    <!-- STUB comments -->
-    <!-- Row 4: Comments (full width) -->
-    <div class="border-secondary col-12 my-1">
-        <div v-for="comment in comments" :key="comment.id" class="card elevation-3 border-bottom pb-3 mb-3">
-            <Comments activeEventComments/>
-        </div>
-    </div>
-</section>
-
-
 </template>
 
 
@@ -73,15 +91,16 @@
 
 <script>
 import { AppState } from '../AppState';
-import { computed, reactive, onMounted, ref, onUpdated, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import Pop from '../utils/Pop.js';
-import { stringifyQuery, useRoute } from 'vue-router';
-import ModalWrapper from '../components/ModalWrapper.vue';
+import { useRoute } from 'vue-router';
+// import ModalWrapper from '../components/ModalWrapper.vue';
 import { ticketsService } from '../services/TicketsService.js'
 import { eventsService } from '../services/EventsService.js';
-import CommentsForm from '../components/CommentsForm.vue';
+import { router } from '../router.js';
+// import CommentsForm from '../components/CommentsForm.vue';
 export default {
-    // props: { activeEventComments {type: String, required: true}}
+
     setup() {
         const inProgress = ref(false)
         const route = useRoute();
@@ -116,12 +135,15 @@ export default {
         }
         return {
             inProgress,
-            // TODO ? IS THIS CORRECT?
+            event: computed(() => AppState.event),
             user: computed(() => AppState.user),
             event: computed(() => AppState.activeEvent),
             comments: computed(() => AppState.activeEventComments),
             tickets: computed(() => AppState.activeEventTickets),
             isTicket: computed(() => AppState.activeEventTickets.find(ticket => ticket.accountId == AppState.account.id)),
+            account: computed(() => AppState.account),
+
+
             async createTicket() {
                 try {
                     inProgress.value = true
@@ -140,10 +162,22 @@ export default {
                 } catch (error) {
                     Pop.error(error)
                 }
+            },
+            async cancelEvent() {
+                try {
+                    if (await Pop.confirm('Are you sure you want to cancel this event?')) {
+                        const eventId = AppState.activeEvent.id
+                        await eventsService.cancelEvent(eventId)
+                        router.push({ name: 'Events' })
+                        Pop.success('Event Canceled')
+                    }
+                } catch (error) {
+                    Pop.error(error)
+                }
             }
+
         };
     },
-    components: {CommentsForm, ModalWrapper}
 };
 </script>
 
@@ -174,4 +208,5 @@ export default {
     aspect-ratio: 1/1;
     border-radius: 10px;
     object-fit: cover;
-}</style>
+}
+</style>

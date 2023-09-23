@@ -1,26 +1,36 @@
 <template>
-  <!-- FIXME do I need a v-for here? so I can reference the account? -->
-  <div v-if="account" class="about text-center">
-    <h1>Welcome {{ account.name }}</h1>
-    <img class="rounded" :src="account.picture" alt="" />
-    <p>{{ account.email }}</p>
-  </div>
   <div class="container">
-    <h3 class="text-center">Tickets you have!</h3>
-    {{ myTickets }}
-    <!-- <div v-for="ticket in myTickets" :key="ticket.id"  class="row pt-3 justify-content-between"> -->
-<!-- <MyTickets :event="ticket.event"/> -->
-      <!-- <div class="col-3 p-2 card elevation-3 text-center">
-        ${Tickets for events I have purchased.}
+
+    <div v-if="account" class="row text-center justify-content-center">
+      <div class="col-12">
+        <h1>Welcome {{ account.name }}</h1>
       </div>
-      <div class="col-3 p-2 card elevation-3 text-center">
-        ${Tickets for events I have purchased.}
+      <div class="col-12">
+        <img class="rounded mx-auto d-block" :src="account.picture" alt="" />
       </div>
-        <div class="col-3 p-2 card elevation-3 text-center">
-        ${Tickets for events I have purchased.} -->
+      <div class="col-12">
+        <p>{{ account.email }}</p>
       </div>
-    <!-- </div> -->
+    </div>
+
+    <div class="row">
+      <div class="col-12 text-center">
+        <h3>Your Tickets!</h3>
+      </div>
+    </div>
+
+    <div class="row gy-4 justify-content-center">
+      <div v-for="ticket in myTickets" :key="ticket.id" class="col-4 text-center">
+        <MyTickets :ticket="ticket" />
+        <!-- Consider using the below code if you need to display ticket names outside the MyTickets component -->
+        <!-- <div>{{ ticket.event.name }}</div> -->
+      </div>
+    </div>
+
+  </div>
 </template>
+
+
 
 <script>
 import { computed, onMounted } from 'vue';
@@ -33,12 +43,13 @@ import MyTickets from '../components/MyTickets.vue';
 
 
 export default {
+
   setup() {
     onMounted(() => {
       getMyTicketsByAcc()
     })
 
-       async function getMyTicketsByAcc(){
+    async function getMyTicketsByAcc() {
       try {
         await accountService.getMyTicketsByAcc()
 
@@ -48,11 +59,11 @@ export default {
     }
 
     return {
-      myTickets: computed(() => AppState.myTickets)
-      // account: computed(() => AppState.account)
+      myTickets: computed(() => AppState.myTickets),
+      account: computed(() => AppState.account)
     }
   },
-// components: {MyTickets}
+  components: { MyTickets }
 }
 </script>
 
