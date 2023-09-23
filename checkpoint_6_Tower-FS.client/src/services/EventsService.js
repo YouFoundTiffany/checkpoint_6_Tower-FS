@@ -44,7 +44,6 @@ class EventsService{
         const response = await api.get(`api/events/${eventId}/tickets`)
         logger.log('tickets for this event', response.data)
         AppState.activeEventTickets = response.data.map(ticket => new Ticket(ticket))
-        // TODO
     }
     async cancelEvent(eventId) {
         const response = await api.delete(`api/events/${eventId}`)

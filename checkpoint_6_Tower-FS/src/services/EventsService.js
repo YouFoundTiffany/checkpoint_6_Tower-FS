@@ -23,7 +23,7 @@ class EventsService {
         const originalEvent = await dbContext.Events.findById(eventId)
         if (!originalEvent) throw new Error('No Event with that Id: ${eventId}')
         if (originalEvent.isCanceled == true) throw new Forbidden('This Event is Canceled')
-        // TODO FOR BAD REQUESTS?
+        // FIXME FOR BAD REQUESTS?
         if (accountId != originalEvent.creatorId) throw new Forbidden('You do not own this event!')
         originalEvent.name = updates.name || originalEvent.name
         originalEvent.description = updates.description || originalEvent.description

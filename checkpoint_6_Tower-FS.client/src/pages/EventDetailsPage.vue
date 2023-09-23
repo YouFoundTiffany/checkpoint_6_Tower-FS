@@ -17,10 +17,7 @@
                         <h1 class="mb-2 text-dark">{{ event.name }}
                         </h1>
                         <p class="mb-1">Capacity: {{ event.capacity }}</p>
-                        <!-- <p class="mb-1">Tickets Left: ???</p> -->
-                        <!-- FIXME -->
                         <p v-if="canceled" class="mb-1">THIS EVENT HAS BEEN CANCELED</p>
-
                         <p class="mb-1">Where: {{ event.location }}</p>
                         <p class="mb-1">Date: {{ event.startDate }}</p>
                         <p class="mb-1">Type: {{ event.type }}</p>
@@ -31,16 +28,20 @@
 
             <div class="container">
                 <!-- STUB ticket button -->
-                <div v-if="event" class="fs-4 text-center row justify-content-between">
+                <div v-if="event" class="fs-4 ps-0 pt-2 pe-2  g-2 text-center row justify-content-between">
                     <div class="col-4 bg-info p-2 rounded">
                         <p class="mb-0">{{ event.ticketCount }} Tickets Sold </p>
                     </div>
-                    <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
-                        role="button" class="col-4 bg-warning p-2 rounded">Ticket <i class="mdi mdi-ticket"></i></button>
-                    <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
-                        class="col-4 bg-danger p-2 rounded"> Shred Ticket <i class="mdi mdi-ticket"></i></button>
-                    <button v-else disabled role="button" class="col-4 btn btn-danger p-2 rounded"
-                        title="log in to ticket">log in to get Ticket<i class="mdi mdi-ticket"></i></button>
+                    <div v-if="!isEventFull" class="text-start p-0">
+
+                        <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
+                            role="button" class="col-4 bg-warning p-2 rounded">Ticket <i
+                                class="mdi mdi-ticket"></i></button>
+                        <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
+                            class="col-4 bg-danger p-2 rounded"> Shred Ticket <i class="mdi mdi-ticket"></i></button>
+                        <button v-else disabled role="button" class="col-4 btn btn-danger p-2 rounded"
+                            title="log in to ticket">log in to get Ticket<i class="mdi mdi-ticket"></i></button>
+                    </div>
                 </div>
             </div>
             <!-- STUB ROW 3: Ticket owners -->
@@ -48,9 +49,7 @@
             <div class="container">
                 <div class="row my-3">
                     <div class="col-12">
-                        <!-- NOTE  -->
-                        <!-- <h4>{{ ticket.profile.name }}</h4> -->
-                        <!-- When using a v-for you are creating a new instance of that item and it exists only in that element. Note to look at inheritance as you can put it on a parent div-->
+
                         <img v-b-tooltip.hover v-for="ticket in tickets" :key="ticket.id" :title="ticket.profile.name"
                             class="profile-pic" :src="ticket.profile.picture" alt="Ticket Holder">
                     </div>
@@ -142,14 +141,25 @@ export default {
             tickets: computed(() => AppState.activeEventTickets),
             isTicket: computed(() => AppState.activeEventTickets.find(ticket => ticket.accountId == AppState.account.id)),
             account: computed(() => AppState.account),
+            isEventFull: computed(() => AppState.activeEventTickets.length >= AppState.activeEvent.capacity),
 
 
             async createTicket() {
                 try {
+                    if (AppState.activeEventTickets.length >= AppState.activeEvent.capacity) {
+                        Pop.error('Tickets are sold out for this event.');
+                        return;
+                    }
+
+
+
                     inProgress.value = true
                     let ticketData = { eventId: route.params.eventId } // just creating a body with eventId on it equal to the route params
                     await ticketsService.createTicket(ticketData)
                     inProgress.value = false
+
+                    await getTicketsByEventId();
+
                 } catch (error) {
                     Pop.error(error)
                 }
@@ -168,7 +178,7 @@ export default {
                     if (await Pop.confirm('Are you sure you want to cancel this event?')) {
                         const eventId = AppState.activeEvent.id
                         await eventsService.cancelEvent(eventId)
-                        router.push({ name: 'Events' })
+                        router.push({ name: 'Event Details' })
                         Pop.success('Event Canceled')
                     }
                 } catch (error) {
@@ -210,3 +220,6 @@ export default {
     object-fit: cover;
 }
 </style>
+   <!-- NOTE  -->
+                        <!-- <h4>{{ ticket.profile.name }}</h4> -->
+                        <!-- When using a v-for you are creating a new instance of that item and it exists only in that element. Note to look at inheritance as you can put it on a parent div-->

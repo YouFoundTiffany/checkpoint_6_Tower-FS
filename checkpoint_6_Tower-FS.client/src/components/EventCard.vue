@@ -1,6 +1,4 @@
 <template>
-  <!-- NOTE two different ways to set up the to props for a router-link -->
-  <!-- <router-link :to="{name: 'Event Details', params: {eventId: event.id}}"> -->
   <router-link :to="{ path: `events/${event.id}` }">
     <div class="card event-card">
 

@@ -89,6 +89,7 @@ export default {
                     Pop.toast('Event Created', 'success')
                     resetForm()
                     Modal.getOrCreateInstance('#create-event').hide()
+                    // TODO CHECK HERE
                     router.push({ name: 'Event Details', params: { eventId: newEvent.id } })
                 } catch (error) {
                     Pop.error(error)
