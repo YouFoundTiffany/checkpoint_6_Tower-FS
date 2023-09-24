@@ -1,7 +1,10 @@
- POST IT    ==     TOWER EVENTS
-Albums              Events
-pictures            comments
-collaborators       tickets
+TOWER EVENTS  ==  POST IT
+Events  =>  Albums
 
-Account     ==      Account
+Comments => Pictures
+
+Tickets =>  Collaborators
+
+Account =>  Account
+
                     Profiles Service/Controller

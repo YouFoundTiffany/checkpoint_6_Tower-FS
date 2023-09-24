@@ -1,90 +1,94 @@
 <template>
     <section>
         <div v-if="event">
+            <div v-if="!event.isCanceled">
 
 
-            <div class="container">
-                <div class="row justify-content-between my-4">
-                    <div class="text-end">
-                        <button v-if="event.creatorId == account.id" @click="cancelEvent">Cancel</button>
+                <div class=" container">
+                    <div class="row justify-content-between my-4">
+                        <div class="text-end">
+                            <button v-if="event.creatorId == account.id" @click="cancelEvent">Cancel</button>
+                        </div>
+                        <!-- EVENT COVER IMAGE -->
+                        <div class="col-6">
+                            <img :src="event.coverImg" class="img-fluid rounded" :alt="event.name + ' cover image'">
+                        </div>
+                        <!-- EVENT DETAILS -->
+                        <div class="col-6 fw-bold bg-light p-3 rounded">
+                            <h1 class="mb-2 text-dark">{{ event.name }}
+                            </h1>
+                            <p class="mb-1">Capacity: {{ event.capacity }}</p>
+                            <p v-if="canceled" class="mb-1">THIS EVENT HAS BEEN CANCELED</p>
+                            <p class="mb-1">Where: {{ event.location }}</p>
+                            <p class="mb-1">Date: {{ event.startDate }}</p>
+                            <p class="mb-1">Type: {{ event.type }}</p>
+                            <p class="mb-1">About: {{ event.description }}</p>
+                        </div>
                     </div>
-                    <!-- EVENT COVER IMAGE -->
-                    <div class="col-6">
-                        <img :src="event.coverImg" class="img-fluid rounded" :alt="event.name + ' cover image'">
+                </div>
+
+                <div class="container">
+                    <!-- STUB ticket button -->
+                    <div v-if="event" class="fs-4 ps-0 pt-2 pe-2  g-2 text-center row justify-content-between">
+                        <div class="col-4 bg-info p-2 rounded">
+                            <p class="mb-0">{{ event.ticketCount }} Tickets Sold </p>
+                        </div>
+                        <div v-if="!isEventFull" class="text-start p-0">
+
+                            <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
+                                role="button" class="col-4 bg-warning p-2 rounded">Ticket <i
+                                    class="mdi mdi-ticket"></i></button>
+                            <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
+                                class="col-4 bg-danger p-2 rounded"> Shred Ticket <i class="mdi mdi-ticket"></i></button>
+                            <button v-else disabled role="button" class="col-4 btn btn-danger p-2 rounded"
+                                title="log in to ticket">log in to get Ticket<i class="mdi mdi-ticket"></i></button>
+                        </div>
+                        <div v-else>EVENT IS SOLD OUT.</div>
                     </div>
-                    <!-- EVENT DETAILS -->
-                    <div class="col-6 fw-bold bg-light p-3 rounded">
-                        <h1 class="mb-2 text-dark">{{ event.name }}
-                        </h1>
-                        <p class="mb-1">Capacity: {{ event.capacity }}</p>
-                        <p v-if="canceled" class="mb-1">THIS EVENT HAS BEEN CANCELED</p>
-                        <p class="mb-1">Where: {{ event.location }}</p>
-                        <p class="mb-1">Date: {{ event.startDate }}</p>
-                        <p class="mb-1">Type: {{ event.type }}</p>
-                        <p class="mb-1">About: {{ event.description }}</p>
+                </div>
+                <!-- STUB ROW 3: Ticket owners -->
+                <!-- STUB Ticket images -->
+                <div class="container">
+                    <div class="row my-3">
+                        <div class="col-12">
+
+                            <img v-b-tooltip.hover v-for="  ticket   in   tickets  " :key="ticket.id"
+                                :title="ticket.profile.name" class="profile-pic" :src="ticket.profile.picture"
+                                alt="Ticket Holder">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="container">
+                    <!-- FIXME tickets don't increase in count unless refreshed -->
+                    <!-- STUB ROW 4 -->
+                    <!-- STUB Create Comment -->
+                    <ModalWrapper id="create-comment" btnColor="danger">
+                        <template #button>
+                            <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
+                        </template>
+                        <template #body>
+                            <CommentsForm />
+                        </template>
+                    </ModalWrapper>
+                    <!-- STUB Display Comments -->
+
+                    <div class="border-secondary col-12 my-1">
+                        <div v-for="  comment   in   comments  " :key="comment.id" class="m-0 card elevation-3 p-3">
+                            <!-- {{ comment }} -->
+                            <Comments :comment="comment" :account="comment.account" />
+                            <span>
+                                <button @click="deleteComment()" class="text-end">Delete</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="container">
-                <!-- STUB ticket button -->
-                <div v-if="event" class="fs-4 ps-0 pt-2 pe-2  g-2 text-center row justify-content-between">
-                    <div class="col-4 bg-info p-2 rounded">
-                        <p class="mb-0">{{ event.ticketCount }} Tickets Sold </p>
-                    </div>
-                    <div v-if="!isEventFull" class="text-start p-0">
-
-                        <button v-if="!isTicket && user.isAuthenticated" :disabled="inProgress" @click="createTicket"
-                            role="button" class="col-4 bg-warning p-2 rounded">Ticket <i
-                                class="mdi mdi-ticket"></i></button>
-                        <button v-else-if="user.isAuthenticated" @click="removeTicket" role="button"
-                            class="col-4 bg-danger p-2 rounded"> Shred Ticket <i class="mdi mdi-ticket"></i></button>
-                        <button v-else disabled role="button" class="col-4 btn btn-danger p-2 rounded"
-                            title="log in to ticket">log in to get Ticket<i class="mdi mdi-ticket"></i></button>
-                    </div>
-                </div>
+            <div v-else class="text-center">
+                <h1>This Event is Canceled.</h1>
+                <h1>⛔</h1>
             </div>
-            <!-- STUB ROW 3: Ticket owners -->
-            <!-- STUB Ticket images -->
-            <div class="container">
-                <div class="row my-3">
-                    <div class="col-12">
-
-                        <img v-b-tooltip.hover v-for="ticket in tickets" :key="ticket.id" :title="ticket.profile.name"
-                            class="profile-pic" :src="ticket.profile.picture" alt="Ticket Holder">
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="container">
-
-                <!-- STUB ROW 4 -->
-                <!-- STUB Create Comment -->
-                <ModalWrapper id="create-comment" btnColor="danger">
-                    <template #button>
-                        <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
-                    </template>
-                    <template #body>
-                        <CommentsForm />
-                    </template>
-                </ModalWrapper>
-                <!-- STUB Display Comments -->
-                <!-- FIXME get the comment name and image to display -->
-                <div class="border-secondary col-12 my-1">
-                    <div v-for="comment in comments" :key="comment.id" class="m-0 card elevation-3 p-3">
-                        <!-- {{ comment }} -->
-                        <Comments :comment="comment" />
-                        <span>
-                            <button @click="deleteComment()" class="text-end">Delete</button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-else class="text-center">
-            <h1>Oops! No event on this page.</h1>
-            <h1>🤔</h1>
         </div>
     </section>
 </template>
@@ -104,7 +108,7 @@ import { router } from '../router.js';
 import { commentsService } from '../services/CommentsService.js';
 import CommentsForm from '../components/CommentsForm.vue';
 import Comments from '../components/Comments.vue';
-
+// import VBTooltip from 'bootstrap-vue'
 
 
 export default {
@@ -117,6 +121,7 @@ export default {
             getEventById();
             getCommentsByEventId();
             getTicketsByEventId();
+            // NOTE this is comment out b/c it crashes the page when live.
             // deleteComment();
         });
         async function getEventById() {
@@ -127,6 +132,7 @@ export default {
                 Pop.error(error);
             }
         }
+
         async function getCommentsByEventId() {
             try {
                 await eventsService.getCommentsByEventId(route.params.eventId);
@@ -146,6 +152,7 @@ export default {
             inProgress,
             event: computed(() => AppState.event),
             user: computed(() => AppState.user),
+            // FIXME test changing this to activeEvent?
             event: computed(() => AppState.activeEvent),
             comments: computed(() => AppState.activeEventComments),
             tickets: computed(() => AppState.activeEventTickets),
@@ -153,6 +160,7 @@ export default {
             account: computed(() => AppState.account),
             isEventFull: computed(() => AppState.activeEventTickets.length >= AppState.activeEvent.capacity),
             activeEventComments: computed(() => AppState.comment),
+
 
             async createTicket() {
                 try {
@@ -183,11 +191,14 @@ export default {
                     Pop.error(error)
                 }
             },
+
+            // FIXME Does not translate to the Home Page and event is still live! change color instead? Put that in the v-if instead of hiding the whole thing
             async cancelEvent() {
                 try {
                     if (await Pop.confirm('Are you sure you want to cancel this event?')) {
                         const eventId = AppState.activeEvent.id
                         await eventsService.cancelEvent(eventId)
+                        AppState.activeEvent.isCanceled = true
                         router.push({ name: 'Event Details' })
                         Pop.success('Event Canceled')
                     }
@@ -195,11 +206,14 @@ export default {
                     Pop.error(error)
                 }
             },
+            // FIXME get it to work
             async deleteComment() {
                 try {
                     if (await Pop.confirm('Are you sure you want to remove your comment?')) {
-                        const commentId = AppState.activeEventComment.id
-                        await commentsService.deleteComment(commentId)
+                        let comment = AppState.activeEventComments.find(comment => comment.eventId == AppState.event.id)
+                        await commentsService.deleteComment(comment.id)
+                        // const commentId = AppState.activeEventComment?.id
+                        // await commentsService.deleteComment(commentId)
                         router.push({ name: 'Event Details' })
                         Pop.success('Comment Deleted!')
                     }

@@ -11,7 +11,8 @@ import { api } from "./AxiosService.js"
 class EventsService{
 
     async getEvents() {
-        const response = await api.get('api/events')
+        const response = await api.get('api/events',{params: {isCanceled: false}})
+
         logger.log('🗼got Events', response.data)
         AppState.events = response.data.map(event => new TEvent(event))
 }
@@ -31,8 +32,6 @@ class EventsService{
         const response = await api.get(`api/events/${eventId}/comments`)
         logger.log('get comments', response.data)
         AppState.activeEventComments = response.data.map(comment => new Comment(comment))
-
-
    }
     async getEventById(eventId) {
         const response = await api.get(`api/events/${eventId}`)
@@ -47,11 +46,12 @@ class EventsService{
     }
     async cancelEvent(eventId) {
         const response = await api.delete(`api/events/${eventId}`)
+
         logger.log('canceled event!', response.data)
         AppState.activeEvent = null
-        let indextoRemove = AppState.events.findIndex(event => event.id == eventId)
-        if (indextoRemove >= 0) {
-            AppState.events.splice(indextoRemove, 1)
+        let indexToRemove = AppState.events.findIndex(event => event.id == eventId)
+        if (indexToRemove >= 0) {
+            AppState.events.splice(indexToRemove, 1)
         }
     }
 

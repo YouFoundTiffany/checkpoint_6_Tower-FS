@@ -23,9 +23,9 @@ CommentSchema.virtual('creator', {
     ref: 'Account',
     justOne: true
 })
-CommentSchema.virtual('name', {
-    localField: 'userName',
-    foreignField: 'name',
-    ref: 'Account',
-    justOne: true
-})
+// CommentSchema.virtual('name', {
+//     localField: 'userName',
+//     foreignField: 'name',
+//     ref: 'Account',
+//     justOne: true
+// })

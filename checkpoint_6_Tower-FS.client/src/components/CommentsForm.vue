@@ -29,10 +29,15 @@ export default {
             async createComment() {
                 try {
                     logger.log(commentData.value, AppState.activeEvent.id, route.params.eventId)
+
                     commentData.value.eventId = route.params.eventId
+
                     await commentsService.createComment(commentData.value)
+
                     Pop.toast('Added comment', 'success', 'center-end')
+
                     commentData.value = {}
+
                     Modal.getOrCreateInstance('#create-comment').hide()
                 } catch (error) {
                     Pop.error(error)
