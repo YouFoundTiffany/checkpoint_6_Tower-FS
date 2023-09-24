@@ -70,10 +70,14 @@
                     </template>
                 </ModalWrapper>
                 <!-- STUB Display Comments -->
+                <!-- FIXME get the comment name and image to display -->
                 <div class="border-secondary col-12 my-1">
                     <div v-for="comment in comments" :key="comment.id" class="m-0 card elevation-3 p-3">
                         <!-- {{ comment }} -->
                         <Comments :comment="comment" />
+                        <span>
+                            <button @click="deleteComment()" class="text-end">Delete</button>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -97,7 +101,12 @@ import { useRoute } from 'vue-router';
 import { ticketsService } from '../services/TicketsService.js'
 import { eventsService } from '../services/EventsService.js';
 import { router } from '../router.js';
-// import CommentsForm from '../components/CommentsForm.vue';
+import { commentsService } from '../services/CommentsService.js';
+import CommentsForm from '../components/CommentsForm.vue';
+import Comments from '../components/Comments.vue';
+
+
+
 export default {
 
     setup() {
@@ -107,7 +116,8 @@ export default {
         watchEffect(() => {
             getEventById();
             getCommentsByEventId();
-            getTicketsByEventId()
+            getTicketsByEventId();
+            // deleteComment();
         });
         async function getEventById() {
             try {
@@ -142,7 +152,7 @@ export default {
             isTicket: computed(() => AppState.activeEventTickets.find(ticket => ticket.accountId == AppState.account.id)),
             account: computed(() => AppState.account),
             isEventFull: computed(() => AppState.activeEventTickets.length >= AppState.activeEvent.capacity),
-
+            activeEventComments: computed(() => AppState.comment),
 
             async createTicket() {
                 try {
@@ -184,10 +194,23 @@ export default {
                 } catch (error) {
                     Pop.error(error)
                 }
-            }
+            },
+            async deleteComment() {
+                try {
+                    if (await Pop.confirm('Are you sure you want to remove your comment?')) {
+                        const commentId = AppState.activeEventComment.id
+                        await commentsService.deleteComment(commentId)
+                        router.push({ name: 'Event Details' })
+                        Pop.success('Comment Deleted!')
+                    }
+                } catch (error) {
+                    Pop.error(error)
+                }
 
+            }
         };
     },
+    // components: { CommentsForm, Comments }
 };
 </script>
 
