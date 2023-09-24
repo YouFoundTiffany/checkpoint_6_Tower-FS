@@ -48,7 +48,12 @@ class EventsService{
         const response = await api.delete(`api/events/${eventId}`)
 
         logger.log('canceled event!', response.data)
-        AppState.activeEvent = null
+
+        // testing this line
+        AppState.lastCanceledEvent = AppState.activeEvent;
+
+
+        // AppState.activeEvent = null
         let indexToRemove = AppState.events.findIndex(event => event.id == eventId)
         if (indexToRemove >= 0) {
             AppState.events.splice(indexToRemove, 1)
