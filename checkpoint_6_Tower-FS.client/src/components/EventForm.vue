@@ -28,7 +28,7 @@
             <!-- CAPACITY -->
             <div class="mb-1 col-6">
                 <label for="event-capacity">Capacity</label>
-                <input v-model="eventData.capacity" id="event-capacity" class="form-control" type="number" min="5"
+                <input v-model="eventData.capacity" id="event-capacity" class="form-control" type="number" min="1"
                     max="1000" placeholder="Capacity of Event" required>
             </div>
             <!-- START DATE -->

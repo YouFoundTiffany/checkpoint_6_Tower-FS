@@ -18,7 +18,7 @@
                             <h1 class="mb-2 text-dark">{{ event.name }}
                             </h1>
                             <p class="mb-1">Capacity: {{ event.capacity }}</p>
-                            <p v-if="canceled" class="mb-1">THIS EVENT HAS BEEN CANCELED</p>
+                            <!-- <p v-if="canceled" class="mb-1">THIS EVENT HAS BEEN CANCELED</p> -->
                             <p class="mb-1">Where: {{ event.location }}</p>
                             <p class="mb-1">Date: {{ event.startDate }}</p>
                             <p class="mb-1">Type: {{ event.type }}</p>
@@ -95,6 +95,7 @@
                 <h1>⛔</h1>
             </div>
         </div>
+        <!-- </div> -->
     </section>
 </template>
 
@@ -204,7 +205,6 @@ export default {
 
             async cancelEvent() {
                 try {
-                    debugger
                     if (await Pop.confirm('Are you sure you want to cancel this event?')) {
                         const eventId = AppState.activeEvent.id
                         await eventsService.cancelEvent(eventId)
@@ -215,6 +215,7 @@ export default {
                 } catch (error) {
                     Pop.error(error)
                 }
+                getEventById()
             },
             // FIXME get it to work
             async deleteComment() {
@@ -223,14 +224,10 @@ export default {
                     if (await Pop.confirm('Are you sure you want to remove your comment?')) {
                         logger.log('line 217', AppState.activeEventComments);
                         logger.log('line 218', AppState.event)
-                        const commentId = AppState.activeEventComments.id.find()
 
-
-
-
-                        let comment = AppState.activeEventComments.find(comment => comment.creator.creatorId == AppState.account.id)
+                        let comment = AppState.activeEventComments.find(comment => comment.accountId == AppState.account.id)
                         logger.log('line 221 active event?', comment)
-                        await commentsService.deleteComment(commentId)
+                        await commentsService.deleteComment(comment.id)
                         logger.log('line 223, Comment to delete:', comment);
 
 

@@ -3,6 +3,7 @@ import { Schema } from "mongoose"
 
 export const CommentSchema = new Schema({
     creatorId: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
+
     // NOTE did not work Testing name
     // userName: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
 
@@ -10,7 +11,7 @@ export const CommentSchema = new Schema({
 
     body: { type: String, required: true, minlength: 1, maxlength: 500 },
 
-    // NOTE stretch goal to use the is Attending
+    // // NOTE stretch goal to use the is Attending
     isAttending: { type: Boolean, required: true, default: false },
 
 
@@ -23,9 +24,9 @@ CommentSchema.virtual('creator', {
     ref: 'Account',
     justOne: true
 })
-// CommentSchema.virtual('name', {
-//     localField: 'userName',
-//     foreignField: 'name',
-//     ref: 'Account',
-//     justOne: true
-// })
+CommentSchema.virtual('event', {
+    localField: 'eventId',
+    foreignField: '_id',
+    ref: 'Event',
+    justOne: true
+});

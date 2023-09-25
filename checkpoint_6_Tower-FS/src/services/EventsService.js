@@ -1,5 +1,7 @@
 import { dbContext } from "../db/DbContext.js";
+import { AccountSchema } from "../models/Account.js";
 import { BadRequest, Forbidden } from "../utils/Errors.js";
+import { accountService } from "./AccountService.js";
 
 
 class EventsService {
@@ -19,12 +21,16 @@ class EventsService {
     }
 
 
-    async editEvent(eventId, updates) {
+    async editEvent(eventId, updates, accountId) {
         const originalEvent = await dbContext.Events.findById(eventId)
+
         if (!originalEvent) throw new Error('No Event with that Id: ${eventId}')
+
         if (originalEvent.isCanceled == true) throw new Forbidden('This Event is Canceled')
+
         // FIXME FOR BAD REQUESTS?
-        if (accountId != originalEvent.creatorId) throw new Forbidden('You do not own this event!')
+        // if (accountId != originalEvent.creatorId) throw new Forbidden('You do not own this event!')
+
         originalEvent.name = updates.name || originalEvent.name
         originalEvent.description = updates.description || originalEvent.description
         originalEvent.coverImg = updates.coverImg || ''

@@ -24,7 +24,9 @@ export class CommentsController extends BaseController {
     }
     async removeComment(request, response, next) {
         try {
-            const comment = await commentsService.removeComment(request.params.commentId)
+            // ignored the error on the second request.
+            // @ts-ignore
+            const comment = await commentsService.removeComment(request.params.commentId, request.userInfo.id)
             response.send(comment)
         } catch (error) {
             next(error)

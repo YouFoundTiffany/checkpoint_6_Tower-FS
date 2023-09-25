@@ -1,4 +1,3 @@
-
 import { dbContext } from "../db/DbContext.js"
 import { BadRequest, Forbidden } from "../utils/Errors.js"
 import { eventsService } from "./EventsService.js"
@@ -6,7 +5,12 @@ import { eventsService } from "./EventsService.js"
 class CommentsService {
     async createComment(commentBody) {
         const comment = await dbContext.Comments.create(commentBody)
+        // FIXME Original version. changed from ('creator') to event
         await comment.populate('creator')
+
+        // await comment.populate('eventId')
+        // await comment.populate('profile')
+
         return comment
     }
 
@@ -17,9 +21,9 @@ class CommentsService {
         return comments
     }
     async removeComment(commentId) {
-        const comment = await dbContext.Comments.findById(commentId).populate('creatorId eventId')
+        const comment = await dbContext.Comments.findById(commentId).populate('creator eventId')
         if (!comment) throw new BadRequest(`No Comment at this Id ${commentId}`)
-        // if (accountId != comment.creatorId) throw new Forbidden(`You did not make this Comment. Id: ${commentId}`)
+
 
         await comment.remove()
         // @ts-ignore
