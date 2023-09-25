@@ -38,9 +38,9 @@ export default {
 
                     const comment = await commentsService.createComment(commentData.value)
 
-                    const account = await accountService.getAccount(comment.accountId)
+                    // const account = await accountService.getAccount(comment.account.id)
 
-                    comment.account = account
+                    // comment.account = account
 
                     Pop.toast('Added comment', 'success', 'center-end')
 

@@ -78,7 +78,7 @@
                     <!-- STUB Display Comments -->
 
                     <div class="border-secondary col-12 my-1">
-                        <div v-for="  comment   in   comments  " :key="comment.id" class="m-0 card elevation-3 p-3">
+                        <div v-for="  comment in activeEventComments  " :key="comment.id" class="m-0 card elevation-3 p-3">
                             <!-- {{ comment }} -->
                             <Comments :comment="comment" :account="comment.account" />
                             <span>
@@ -194,7 +194,9 @@ export default {
             async removeTicket() {
                 try {
                     // NOTE need to find the ticket in the appstate that is ours, and delete it by it's id
-                    let ticket = AppState.activeEventTickets.find(ticket => ticket.accountId == AppState.account.id)
+                    // old version, cannot read accountId
+                    // let ticket = AppState.activeEventTickets.find(ticket => ticket.accountId == AppState.account.id)
+                    let ticket = AppState.activeEventTickets.find(ticket => ticket.creatorId == AppState.account.id)
                     await ticketsService.removeTicket(ticket.id)
                 } catch (error) {
                     Pop.error(error)
