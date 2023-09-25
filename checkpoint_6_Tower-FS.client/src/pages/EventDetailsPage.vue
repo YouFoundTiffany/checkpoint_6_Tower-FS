@@ -52,7 +52,7 @@
                     <div class="row my-3">
                         <div class="col-12">
 
-                            <img v-b-tooltip.hover v-for="  ticket   in   tickets  " :key="ticket.id"
+                            <img v-for="ticket in tickets" :key="ticket.id" data-bs-toggle="tooltip" data-bs-placement="top"
                                 :title="ticket.profile.name" class="profile-pic" :src="ticket.profile.picture"
                                 alt="Ticket Holder">
                         </div>
@@ -61,17 +61,20 @@
                 </div>
 
                 <div class="container">
-                    <!-- FIXME tickets don't increase in count unless refreshed -->
-                    <!-- STUB ROW 4 -->
-                    <!-- STUB Create Comment -->
-                    <ModalWrapper id="create-comment" btnColor="danger">
-                        <template #button>
-                            <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
-                        </template>
-                        <template #body>
-                            <CommentsForm />
-                        </template>
-                    </ModalWrapper>
+                    <div v-if="user.isAuthenticated">
+
+                        <!-- STUB ROW 4 -->
+                        <!-- STUB Create Comment -->
+                        <ModalWrapper id="create-comment" btnColor="danger">
+                            <template #button>
+                                <div>Comment<i class="mdi mdi-plus-box-outline"></i></div>
+                            </template>
+                            <template #body>
+                                <CommentsForm />
+                            </template>
+                        </ModalWrapper>
+                    </div>
+
                     <!-- STUB Display Comments -->
 
                     <div class="border-secondary col-12 my-1">
@@ -79,7 +82,9 @@
                             <!-- {{ comment }} -->
                             <Comments :comment="comment" :account="comment.account" />
                             <span>
-                                <button @click="deleteComment()" class="text-end">Delete</button>
+                                <!-- event.creatorId == account.id -->
+                                <button v-if="user.isAuthenticated && comment.creatorId == account.id"
+                                    @click="deleteComment()" class="text-end">Delete</button>
                             </span>
                         </div>
                     </div>
@@ -108,6 +113,7 @@ import { router } from '../router.js';
 import { commentsService } from '../services/CommentsService.js';
 import CommentsForm from '../components/CommentsForm.vue';
 import Comments from '../components/Comments.vue';
+import { logger } from '../utils/Logger.js';
 // import VBTooltip from 'bootstrap-vue'
 
 
@@ -150,10 +156,12 @@ export default {
         }
         return {
             inProgress,
+            // NOTE if other things don't work you can put this back active!
             event: computed(() => AppState.event),
-            user: computed(() => AppState.user),
             // FIXME test changing this to activeEvent?
             event: computed(() => AppState.activeEvent),
+            user: computed(() => AppState.user),
+            //
             comments: computed(() => AppState.activeEventComments),
             tickets: computed(() => AppState.activeEventTickets),
             isTicket: computed(() => AppState.activeEventTickets.find(ticket => ticket.accountId == AppState.account.id)),
@@ -164,19 +172,19 @@ export default {
 
             async createTicket() {
                 try {
+                    // added If statement to manage when event is sold out.
                     if (AppState.activeEventTickets.length >= AppState.activeEvent.capacity) {
                         Pop.error('Tickets are sold out for this event.');
                         return;
                     }
 
 
-
                     inProgress.value = true
                     let ticketData = { eventId: route.params.eventId } // just creating a body with eventId on it equal to the route params
                     await ticketsService.createTicket(ticketData)
                     inProgress.value = false
-
-                    await getTicketsByEventId();
+                    // await getTicketsByEventId();
+                    getEventById();
 
                 } catch (error) {
                     Pop.error(error)
@@ -190,11 +198,13 @@ export default {
                 } catch (error) {
                     Pop.error(error)
                 }
+                // getTicketsByEventId()
+                getEventById()
             },
 
-            // FIXME Does not translate to the Home Page and event is still live! change color instead? Put that in the v-if instead of hiding the whole thing
             async cancelEvent() {
                 try {
+                    debugger
                     if (await Pop.confirm('Are you sure you want to cancel this event?')) {
                         const eventId = AppState.activeEvent.id
                         await eventsService.cancelEvent(eventId)
@@ -208,12 +218,23 @@ export default {
             },
             // FIXME get it to work
             async deleteComment() {
+                debugger
                 try {
                     if (await Pop.confirm('Are you sure you want to remove your comment?')) {
-                        let comment = AppState.activeEventComments.find(comment => comment.eventId == AppState.event.id)
-                        await commentsService.deleteComment(comment.id)
-                        // const commentId = AppState.activeEventComment?.id
-                        // await commentsService.deleteComment(commentId)
+                        logger.log('line 217', AppState.activeEventComments);
+                        logger.log('line 218', AppState.event)
+                        const commentId = AppState.activeEventComments.id.find()
+
+
+
+
+                        let comment = AppState.activeEventComments.find(comment => comment.creator.creatorId == AppState.account.id)
+                        logger.log('line 221 active event?', comment)
+                        await commentsService.deleteComment(commentId)
+                        logger.log('line 223, Comment to delete:', comment);
+
+
+
                         router.push({ name: 'Event Details' })
                         Pop.success('Comment Deleted!')
                     }
@@ -224,7 +245,7 @@ export default {
             }
         };
     },
-    // components: { CommentsForm, Comments }
+    components: { CommentsForm, Comments }
 };
 </script>
 

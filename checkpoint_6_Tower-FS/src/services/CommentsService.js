@@ -16,10 +16,10 @@ class CommentsService {
         const comments = await dbContext.Comments.find({ eventId: eventId }).populate('creator')
         return comments
     }
-    async removeComment(commentId, userId) {
+    async removeComment(commentId) {
         const comment = await dbContext.Comments.findById(commentId).populate('creatorId eventId')
         if (!comment) throw new BadRequest(`No Comment at this Id ${commentId}`)
-        if (userId != comment.creatorId) throw new Forbidden(`You did not make this Comment. Id: ${commentId}`)
+        // if (accountId != comment.creatorId) throw new Forbidden(`You did not make this Comment. Id: ${commentId}`)
 
         await comment.remove()
         // @ts-ignore
