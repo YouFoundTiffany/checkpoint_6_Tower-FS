@@ -158,17 +158,17 @@ export default {
         return {
             inProgress,
             // NOTE if other things don't work you can put this back active!
-            event: computed(() => AppState.event),
+            // event: computed(() => AppState.event),
             // FIXME test changing this to activeEvent?
             event: computed(() => AppState.activeEvent),
             user: computed(() => AppState.user),
-            //
+
             comments: computed(() => AppState.activeEventComments),
             tickets: computed(() => AppState.activeEventTickets),
             isTicket: computed(() => AppState.activeEventTickets.find(ticket => ticket.accountId == AppState.account.id)),
             account: computed(() => AppState.account),
             isEventFull: computed(() => AppState.activeEventTickets.length >= AppState.activeEvent.capacity),
-            activeEventComments: computed(() => AppState.comment),
+            activeEventComments: computed(() => AppState.activeEventComments),
 
 
             async createTicket() {
@@ -184,7 +184,7 @@ export default {
                     let ticketData = { eventId: route.params.eventId } // just creating a body with eventId on it equal to the route params
                     await ticketsService.createTicket(ticketData)
                     inProgress.value = false
-                    // await getTicketsByEventId();
+                    getTicketsByEventId();
                     getEventById();
 
                 } catch (error) {
@@ -199,7 +199,7 @@ export default {
                 } catch (error) {
                     Pop.error(error)
                 }
-                // getTicketsByEventId()
+                getTicketsByEventId()
                 getEventById()
             },
 
@@ -219,7 +219,6 @@ export default {
             },
             // FIXME get it to work
             async deleteComment() {
-                debugger
                 try {
                     if (await Pop.confirm('Are you sure you want to remove your comment?')) {
                         logger.log('line 217', AppState.activeEventComments);

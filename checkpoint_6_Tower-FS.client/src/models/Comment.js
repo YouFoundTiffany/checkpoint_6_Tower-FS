@@ -7,6 +7,7 @@ export class Comment {
         // this.name = data.name
         this.id = data.id
         this.eventId = data.eventId
+        // this.event = data.event
         this.creator = data.creator
         this.creatorId = data.creatorId
         this.body = data.body

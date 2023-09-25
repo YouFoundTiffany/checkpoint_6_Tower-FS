@@ -4,6 +4,7 @@ import { eventsService } from "./EventsService.js"
 
 class CommentsService {
     async createComment(commentBody) {
+        // Logger.log('what came over from the form?', commentBody)
         const comment = await dbContext.Comments.create(commentBody)
         // FIXME Original version. changed from ('creator') to event
         await comment.populate('creator')

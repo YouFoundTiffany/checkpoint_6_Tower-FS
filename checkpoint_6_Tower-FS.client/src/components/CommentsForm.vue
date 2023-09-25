@@ -19,7 +19,10 @@ import Pop from '../utils/Pop.js';
 import { logger } from '../utils/Logger.js';
 import { useRoute } from 'vue-router';
 import { commentsService } from '../services/CommentsService.js'
+import { accountService } from '../services/AccountService.js'
 import { Modal } from 'bootstrap';
+
+
 export default {
     setup() {
         const commentData = ref({})
@@ -28,11 +31,16 @@ export default {
             commentData,
             async createComment() {
                 try {
+                    // debugger
                     logger.log(commentData.value, AppState.activeEvent.id, route.params.eventId)
 
                     commentData.value.eventId = route.params.eventId
 
-                    await commentsService.createComment(commentData.value)
+                    const comment = await commentsService.createComment(commentData.value)
+
+                    const account = await accountService.getAccount(comment.accountId)
+
+                    comment.account = account
 
                     Pop.toast('Added comment', 'success', 'center-end')
 

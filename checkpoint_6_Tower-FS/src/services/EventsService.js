@@ -29,7 +29,7 @@ class EventsService {
         if (originalEvent.isCanceled == true) throw new Forbidden('This Event is Canceled')
 
         // FIXME FOR BAD REQUESTS?
-        // if (accountId != originalEvent.creatorId) throw new Forbidden('You do not own this event!')
+        if (accountId != originalEvent.creatorId) throw new Forbidden('You do not own this event!')
 
         originalEvent.name = updates.name || originalEvent.name
         originalEvent.description = updates.description || originalEvent.description
